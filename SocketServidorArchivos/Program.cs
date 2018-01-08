@@ -11,6 +11,7 @@ namespace SocketServidorArchivos
     {
         static void Main(string[] args)
         {
+            //sample
             Console.Write("Datos");
             
             Console.Write(LNUsuarios.Instance.Listar().Count);
