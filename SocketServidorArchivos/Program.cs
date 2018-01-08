@@ -13,7 +13,6 @@ namespace SocketServidorArchivos
         {
             //sample
             Console.Write("Datos");
-            
             Console.Write(LNUsuarios.Instance.Listar().Count);
             Console.Read();
         }
