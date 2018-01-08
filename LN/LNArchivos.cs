@@ -94,6 +94,7 @@ namespace LN
             bd.AsignarParametro("@nombre", item.nombre);
             bd.AsignarParametro("@fecha", item.fecha);
             bd.AsignarParametro("@ubicacion", item.ubicacion);
+            bd.AsignarParametroInt("@id", item.id);
             bd.EjecutarComando();
             bd.Desconectar();
           
