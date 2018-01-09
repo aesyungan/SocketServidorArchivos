@@ -89,8 +89,9 @@ namespace SocketServidorArchivos
                 } while (!(bytesReceived > 0) && bytesReceived > buffer.Length);
 
                 string tipoDeInstruccion = Encoding.UTF8.GetString(buffer, 0, bytesReceived);
-               
+                Console.WriteLine("id Instruccion:"+tipoDeInstruccion);
                 int idAccion = Convert.ToInt32(tipoDeInstruccion);
+                client.Send(Encoding.ASCII.GetBytes("Intrucion recibida con exito.."));
                 switch (idAccion)
                 {
                     case 1:
@@ -193,7 +194,7 @@ namespace SocketServidorArchivos
                         break;
                     case 2:
                         Console.WriteLine("Action :" + tipoDeInstruccion + "->Actualizando..");
-                      
+
                         //--------------------------------------------------------------------------
                         //Recibir nombre archivo cifrado
                         buffer = new byte[1024];
@@ -289,6 +290,63 @@ namespace SocketServidorArchivos
                         break;
                     case 3:
                         Console.WriteLine("Action :" + tipoDeInstruccion + "Descargando..");
+                        buffer = new byte[1024];
+                        bytesReceived = 1;
+                        do
+                        {
+                            bytesReceived = client.Receive(buffer);
+                        } while (!(bytesReceived > 0) && bytesReceived > buffer.Length);
+
+                        String filenameDescargar = Encoding.UTF8.GetString(buffer, 0, bytesReceived);
+
+                        Console.WriteLine("Recibido: " + filenameDescargar);
+                        client.Send(Encoding.ASCII.GetBytes("Recibiendo criptograma"));
+                        FileStream fileStream = new FileStream(filedirectory + "descifrados/" + filenameDescargar, FileMode.Open);
+
+                        client.Send(Encoding.ASCII.GetBytes(fileStream.Length.ToString())); //Envio de tamano
+                        do
+                        {
+                            bytesReceived = client.Receive(buffer);
+                        } while (!(bytesReceived > 0));
+
+                        string msg = Encoding.UTF8.GetString(buffer, 0, bytesReceived);
+                        Console.WriteLine("Recibido Tamaño:" + msg);
+
+                        long sz = fileStream.Length;
+                        byte[] buff = new byte[8192];
+                        bytesRead = 0;
+                        stopwatch2 = new Stopwatch();
+                        stopwatch2.Start();
+                        // DateTime tiempo3 = DateTime.Now;
+                        //Console.WriteLine("INICIO tiempo: " + tiempo3.Ticks);
+                        //envio de criptograma
+                        do
+                        {
+                            bytesRead = fileStream.Read(buff, 0, buff.Length);
+                            if (bytesRead > 0)
+                            {
+                                //sock.Send(buff);
+                                client.Send(buff, bytesRead, SocketFlags.None);
+                            }
+                        } while (bytesRead > 0);
+                        fileStream.Close();
+
+                        bytesReceived = 1;
+                        buffer = new byte[8192];
+
+                        do
+                        {
+                            bytesReceived = client.Receive(buffer);
+                        } while (!(bytesReceived > 0));
+
+                        msg = Encoding.UTF8.GetString(buffer, 0, bytesReceived);
+
+                        // long tiempo4 = Convert.ToInt64(ack);
+                        stopwatch2.Stop();
+                        client.Close();
+                        
+
+                        Console.WriteLine("\nProceso completado!!");
                         break;
                 }
 
@@ -312,7 +370,7 @@ namespace SocketServidorArchivos
             Archivos item = new Archivos();
             item.id = id_Archivo;
             item = LNArchivos.Instance.ListarId(item);
-            
+
             item.nombre = nombre;
             item.fecha = DateTime.Now.ToString("M-d-yyyy");
             item.ubicacion = "\\recibidos\\descifrados\\" + nombre;
