@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="CADENA_CONEXION" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Server=127.0.0.1;User Id=postgres;Password=12345;Database=archivo;</Value>
+      <Value Profile="(Default)">Server=127.0.0.1;User Id=postgres;Password=12345;Database=socket;</Value>
     </Setting>
     <Setting Name="PROVEEDOR_POSTGRESQL" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Npgsql</Value>

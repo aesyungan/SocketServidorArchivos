@@ -25,7 +25,7 @@ namespace AD.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Server=127.0.0.1;User Id=postgres;Password=12345;Database=archivo;")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Server=127.0.0.1;User Id=postgres;Password=12345;Database=socket;")]
         public string CADENA_CONEXION {
             get {
                 return ((string)(this["CADENA_CONEXION"]));
